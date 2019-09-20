@@ -9,7 +9,7 @@ namespace EncodingTest
     class Program
     {
         unsafe public static void PrintBin(ref string s)
-        {
+        {//打印一个字符串在内存中的十六进制数据
             fixed (char* fp = s)
             {
                 var p = (byte*)fp;
@@ -22,7 +22,7 @@ namespace EncodingTest
         }
 
         public static void PrintEncoding(string str, string encoding)
-        {
+        {//输出一个字符串按照指定编码对应的十六进制数据
             Console.WriteLine($"{encoding}:");
             var bin = Encoding.GetEncoding(encoding).GetBytes(str);
             for (var i = 0; i < bin.Length; ++i)
@@ -35,6 +35,8 @@ namespace EncodingTest
         static void Main(string[] args)
         {
             var str = "实践出真知";
+            //下面3个类所在的文件把上面几个字用不同编码格式存储
+            //输出结果相同 说明不管cs源代码用什么形式编码保存 编译出的IL都是按照UTF16形式编码
             var str2312 = FileGB2312.getStr();
             var str8 = FileUTF8.getStr();
             var str16 = FileUTF16.getStr();
@@ -43,6 +45,7 @@ namespace EncodingTest
             PrintBin(ref str8);
             PrintBin(ref str16);
 
+            //使用不同编码形式输出，比照结果可以看出c#.net对内置字符串变量使用的是utf16编码格式
             PrintEncoding(str,"utf-8");
             PrintEncoding(str, "utf-16");
             PrintEncoding(str, "gb2312");
